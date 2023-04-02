@@ -1,0 +1,5 @@
+REM open the link of my project
+GUI r
+DELAY 1000
+STRING https://github.com/liad07/ducky-script-compiler
+ENTER
