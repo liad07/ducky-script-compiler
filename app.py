@@ -11,6 +11,7 @@ root = tk.Tk()
 root.geometry("500x500")
 root.configure(bg="#2b2b2b")
 
+
 # Define functions
 def runer(comand, line):
     line2 = " ".join(line)
@@ -44,11 +45,12 @@ def runer(comand, line):
         end_index = text.index(end_word)
         result = text[start_index:end_index].strip()
         print(result)
-        for i in range(times-1):
+        for i in range(times - 1):
             linesof = result.split("\n")
             print(len(linesof))
             for j in range(len(linesof)):
-                runer(linesof[j].split(" ")[0], linesof[j].replace(linesof[j].split(" ")[0].strip(), "").strip().replace(" ",""))
+                runer(linesof[j].split(" ")[0],
+                      linesof[j].replace(linesof[j].split(" ")[0].strip(), "").strip().replace(" ", ""))
 
     if comand == "KNOWN":
         text_widget.tag_config("orange", foreground="orange")
@@ -61,6 +63,7 @@ def runer(comand, line):
             text_widget.tag_add("orange", start, end)
             start = end
 
+
 def run_script():
     global lines
     global script_text
@@ -72,6 +75,7 @@ def run_script():
         z = lines[i].split(" ")
         runer(comand, z)
 
+
 def open_file():
     global script_text
     file_path = filedialog.askopenfilename()
@@ -80,6 +84,18 @@ def open_file():
             script_text.delete("1.0", tk.END)
             script_text.insert(tk.END, f.read())
 
+
+def save_file():
+    global script_text
+    file_path = filedialog.asksaveasfilename(defaultextension=".ds", filetypes=[("Ducky Script files", "*.ds")])
+    if file_path:
+        with open(file_path, "w") as f:
+            f.write(script_text.get("1.0", "end-1c"))
+
+
+def clear_script():
+    global script_text
+    script_text.delete("1.0", tk.END)
 # Create GUI
 root.title("Ducky Script Compiler")
 # Create GUI (continued)
@@ -95,12 +111,15 @@ script_frame.pack(padx=20, pady=10, fill=tk.BOTH, expand=True)
 script_scrollbar = ttk.Scrollbar(script_frame)
 script_scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-script_text = tk.Text(script_frame, wrap=tk.NONE, yscrollcommand=script_scrollbar.set, bg="#2b2b2b", fg="#fff", insertbackground="#fff")
+script_text = tk.Text(script_frame, wrap=tk.NONE, yscrollcommand=script_scrollbar.set, bg="#2b2b2b", fg="#fff",
+                      insertbackground="#fff")
 script_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
 script_scrollbar.config(command=script_text.yview)
 
 open_button = ttk.Button(root, text="Open File", command=open_file)
+open_button.pack(side=tk.LEFT, padx=20)
+open_button = ttk.Button(root, text="save File", command=save_file)
 open_button.pack(side=tk.LEFT, padx=20)
 
 run_button = ttk.Button(root, text="Run Script", command=run_script)
